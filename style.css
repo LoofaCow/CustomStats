@@ -1,1 +1,35 @@
-/* All style elements for your extension go here */
+#status-sheet {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+}
+.stat-category {
+    margin-bottom: 20px;
+}
+.stat-category h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+label {
+    display: block;
+    margin: 5px 0;
+}
+textarea {
+    width: 100%;
+    height: 80px;
+    margin: 5px 0;
+}
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0056b3;
+}
