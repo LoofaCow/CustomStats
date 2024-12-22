@@ -1,8 +1,12 @@
 {
-  "name": "Status Sheet",
-  "version": "1.0.0",
-  "description": "An extension to track character health, mana, stamina, attributes, skills, relationships, and quests.",
-  "author": "Trevor",
-  "scripts": ["index.js"],
-  "styles": ["style.css"]
+    "display_name": "Status Sheet",
+    "loading_order": 1,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "Trevor",
+    "version": "1.0.0",
+    "homePage": "https://github.com/LoofaCow/CustomStats",
+    "auto_update": true
 }
