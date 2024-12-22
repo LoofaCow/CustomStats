@@ -1,12 +1,11 @@
 {
-    "display_name": "Status Sheet",
-    "loading_order": 1,
+    "display_name": "CustomStats",
+    "loading_order": 9,
     "requires": [],
     "optional": [],
     "js": "index.js",
     "css": "style.css",
     "author": "Trevor",
     "version": "1.0.0",
-    "homePage": "https://github.com/LoofaCow/CustomStats",
-    "auto_update": true
+    "homePage": "https://github.com/LoofaCow/CustomStats"
 }
