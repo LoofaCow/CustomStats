@@ -1,11 +1,8 @@
 {
-    "display_name": "Name Displayed in SillyTavern",
-    "loading_order": 9,
-    "requires": [],
-    "optional": [],
-    "js": "index.js",
-    "css": "style.css",
-    "author": "yourNameHere",
-    "version": "1.0.0",
-    "homePage": "yourUrlHere"
+  "name": "Status Sheet",
+  "version": "1.0.0",
+  "description": "An extension to track character health, mana, stamina, attributes, skills, relationships, and quests.",
+  "author": "Your Name",
+  "scripts": ["index.js"],
+  "styles": ["style.css"]
 }
