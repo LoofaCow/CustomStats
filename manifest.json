@@ -2,7 +2,7 @@
   "name": "Status Sheet",
   "version": "1.0.0",
   "description": "An extension to track character health, mana, stamina, attributes, skills, relationships, and quests.",
-  "author": "Your Name",
+  "author": "Trevor",
   "scripts": ["index.js"],
   "styles": ["style.css"]
 }
