@@ -1,46 +1,103 @@
-// index.js
-import { getContext } from "../../extensions.js";
+import { eventSource, event_types } from "../../../../script.js";
+import { getContext, renderExtensionTemplateAsync, saveMetadataDebounced } from "../../../extensions.js";
 
-// Add a status box UI
-function createStatusBox() {
-    const statusBox = document.createElement("div");
-    statusBox.id = "status-box";
-    statusBox.innerHTML = `
-        <h3>Status Screen</h3>
-        <div id="status-content">
-            <p>Initializing...</p>
-        </div>
-    `;
-    document.body.appendChild(statusBox);
+const MODULE_NAME = "StatusTracker";
+
+// User's status sheet
+let statusSheet = {
+    health: 100,
+    stamina: 100,
+    inventory: [],
+};
+
+// Update interval counter
+let checkCounter = 0;
+
+// Function to initialize the extension
+function initializeExtension() {
+    setupEventListeners();
+    loadUI();
+    loadSettings();
 }
 
-// Update status dynamically
-function updateStatus(message) {
-    const statusContent = document.getElementById("status-content");
-    if (statusContent) {
-        statusContent.innerHTML = `<p>${message}</p>`;
+// Load UI elements into Silly Tavern
+async function loadUI() {
+    const settingsHtml = await renderExtensionTemplateAsync("third-party/Extension-StatusTracker", "settings");
+    const container = document.getElementById("extensions_settings") || document.body;
+    container.insertAdjacentHTML("beforeend", settingsHtml);
+
+    // Attach event listeners to UI elements
+    document.getElementById("reset-status").addEventListener("click", resetStatusSheet);
+}
+
+// Attach event listeners for chat events
+function setupEventListeners() {
+    eventSource.on(event_types.MESSAGE_RECEIVED, onMessageReceived);
+    eventSource.on(event_types.CHAT_CHANGED, resetStatusSheet);
+}
+
+// Handle incoming messages
+function onMessageReceived(event) {
+    const message = event.message;
+    processAIResponse(message);
+    updateStatusUI();
+}
+
+// Process AI responses and update status sheet
+function processAIResponse(message) {
+    if (message.includes("damage")) {
+        statusSheet.health = Math.max(0, statusSheet.health - 10);
+    }
+    if (message.includes("rest")) {
+        statusSheet.stamina = Math.min(100, statusSheet.stamina + 20);
+    }
+    if (message.includes("found item")) {
+        const item = extractItemFromMessage(message);
+        if (item) {
+            statusSheet.inventory.push(item);
+        }
     }
 }
 
-// Hook into events
-function registerEventListeners() {
-    const { eventSource, event_types } = getContext();
-
-    eventSource.on(event_types.MESSAGE_SENT, (data) => {
-        updateStatus(`Message sent: ${data.message}`);
-    });
-
-    eventSource.on(event_types.MESSAGE_RECEIVED, (data) => {
-        updateStatus(`Message received: ${data.message}`);
-    });
-
-    eventSource.on(event_types.CHAT_CHANGED, (data) => {
-        updateStatus(`Chat switched to: ${data.chatId}`);
-    });
+// Extract an item from an AI response
+function extractItemFromMessage(message) {
+    const match = message.match(/found item: (\w+)/);
+    return match ? match[1] : null;
 }
 
-// Initialize the extension
-(function initialize() {
-    createStatusBox();
-    registerEventListeners();
-})();
+// Update the UI to reflect the current status
+function updateStatusUI() {
+    const statusElement = document.getElementById("status-display");
+    if (statusElement) {
+        statusElement.innerText = JSON.stringify(statusSheet, null, 2);
+    }
+}
+
+// Reset the status sheet
+function resetStatusSheet() {
+    statusSheet = {
+        health: 100,
+        stamina: 100,
+        inventory: [],
+    };
+    updateStatusUI();
+}
+
+// Save settings
+function saveSettings() {
+    const context = getContext();
+    context.chat_metadata[MODULE_NAME] = statusSheet;
+    saveMetadataDebounced();
+}
+
+// Load settings from previous session
+function loadSettings() {
+    const context = getContext();
+    if (context.chat_metadata[MODULE_NAME]) {
+        statusSheet = context.chat_metadata[MODULE_NAME];
+    }
+    updateStatusUI();
+}
+
+// Initialize the extension on page load
+document.addEventListener("DOMContentLoaded", initializeExtension);
