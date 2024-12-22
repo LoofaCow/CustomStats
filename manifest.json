@@ -1,13 +1,12 @@
 {
-    "display_name": "User Stats Tracker",
-    "loading_order": 1,
-    "requires": [],
-    "optional": [],
-    "js": "index.js",
-    "css": "style.css",
-    "html": "stats.html",
-    "author": "Trevor",
-    "version": "1.0.0",
-    "homePage": "https://github.com/LoofaCow/CustomStats",
-    "auto_update": true
+  "display_name": "Status Screen",
+  "loading_order": 1,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "Trevor",
+  "version": "1.0.0",
+  "homePage": "https://github.com/LoofaCow/CustomStats",
+  "auto_update": true
 }
