@@ -1,12 +1,7 @@
 {
-  "display_name": "Status Screen",
-  "loading_order": 1,
-  "requires": [],
-  "optional": [],
-  "js": "index.js",
-  "css": "style.css",
-  "author": "Trevor",
+  "name": "StatusTracker",
+  "description": "Tracks user status and updates it during text-based adventures.",
   "version": "1.0.0",
-  "homePage": "https://github.com/LoofaCow/CustomStats",
-  "auto_update": true
+  "main": "index.js",
+  "settings": "settings.html"
 }
