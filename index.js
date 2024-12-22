@@ -1,7 +1,5 @@
-// Import necessary modules
 import { getContext } from "../../extensions.js";
 
-// Initialize persistent storage
 let stats = {
     health: 100,
     mana: 100,
@@ -23,67 +21,49 @@ function saveStats() {
     context.settings.set('userStats', stats);
 }
 
-// Create UI elements
-function createUI() {
+// Inject the stats.html into Silly Tavern's interface
+function injectTab() {
     const context = getContext();
+    const appContainer = context.appContainer;
 
-    // Main container
-    const container = document.createElement('div');
-    container.id = 'user-stats-container';
-    container.innerHTML = `
-        <h3>User Stats</h3>
-        <div>
-            <label>Health:</label>
-            <input type="number" id="health" value="${stats.health}" />
-        </div>
-        <div>
-            <label>Mana:</label>
-            <input type="number" id="mana" value="${stats.mana}" />
-        </div>
-        <div>
-            <label>Skills:</label>
-            <textarea id="skills">${stats.skills.join(', ')}</textarea>
-        </div>
-        <div>
-            <label>Attributes:</label>
-            <textarea id="attributes">${stats.attributes.join(', ')}</textarea>
-        </div>
-        <div>
-            <label>Relationships:</label>
-            <textarea id="relationships">${stats.relationships.join(', ')}</textarea>
-        </div>
-        <div>
-            <label>Journal:</label>
-            <textarea id="journal">${stats.journal.join('\\n')}</textarea>
-        </div>
-        <button id="save-stats">Save Stats</button>
-    `;
+    // Load the HTML content
+    fetch('./stats.html')
+        .then(response => response.text())
+        .then(html => {
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            appContainer.appendChild(div);
 
-    // Save button logic
-    container.querySelector('#save-stats').addEventListener('click', () => {
-        stats.health = parseInt(container.querySelector('#health').value, 10);
-        stats.mana = parseInt(container.querySelector('#mana').value, 10);
-        stats.skills = container.querySelector('#skills').value.split(',').map(s => s.trim());
-        stats.attributes = container.querySelector('#attributes').value.split(',').map(a => a.trim());
-        stats.relationships = container.querySelector('#relationships').value.split(',').map(r => r.trim());
-        stats.journal = container.querySelector('#journal').value.split('\\n');
-        saveStats();
-        alert('Stats saved!');
-    });
+            // Attach event listeners to UI elements
+            document.getElementById('stats-health').value = stats.health;
+            document.getElementById('stats-mana').value = stats.mana;
+            document.getElementById('stats-skills').value = stats.skills.join(', ');
+            document.getElementById('stats-attributes').value = stats.attributes.join(', ');
+            document.getElementById('stats-relationships').value = stats.relationships.join(', ');
+            document.getElementById('stats-journal').value = stats.journal.join('\\n');
 
-    // Append to the app
-    const app = context.appContainer;
-    app.appendChild(container);
+            document.getElementById('save-stats').addEventListener('click', () => {
+                stats.health = parseInt(document.getElementById('stats-health').value, 10);
+                stats.mana = parseInt(document.getElementById('stats-mana').value, 10);
+                stats.skills = document.getElementById('stats-skills').value.split(',').map(s => s.trim());
+                stats.attributes = document.getElementById('stats-attributes').value.split(',').map(a => a.trim());
+                stats.relationships = document.getElementById('stats-relationships').value.split(',').map(r => r.trim());
+                stats.journal = document.getElementById('stats-journal').value.split('\\n');
+                saveStats();
+                alert('Stats saved!');
+            });
+        });
 }
 
 // Main initialization function
 export function init() {
     loadStats();
-    createUI();
+    injectTab();
 }
 
 // Cleanup function for plugin shutdown
 export function exit() {
-    const container = document.getElementById('user-stats-container');
-    if (container) container.remove();
+    const tab = document.querySelector('.user-stats-tab');
+    if (tab) tab.remove();
 }
+
