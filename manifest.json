@@ -1,7 +1,0 @@
-{
-  "name": "StatusTracker",
-  "description": "Tracks user status and updates it during text-based adventures.",
-  "version": "1.0.0",
-  "main": "index.js",
-  "settings": "settings.html"
-}
